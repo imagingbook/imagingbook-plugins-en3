@@ -21,9 +21,12 @@ import imagingbook.pub.color.image.ColorStack.ColorStackType;
 import imagingbook.pub.geometry.mappings.linear.Rotation;
 
 /**
- * This plugin performs a Gaussian filter in a user-selectable color space.
- * Demonstrates the use of a generic LinearFilter for Gaussian blurring 
- * (brute force, not separated).
+ * This plugin rotates the input image. This operation
+ * is performed in a color space specified by the user.
+ * The intent is to visualize the differences of linear interpolation
+ * when applied in different color spaces. Bilinear interpolation is 
+ * used to avoid negative results.
+ * 
  * @author W. Burger
  * @version 2013/05/30
  */
@@ -53,11 +56,11 @@ public class Geometry_Rotate_Color implements PlugInFilter {
 			return;
     	}
     	
-    	Rotation map = new Rotation((2 * Math.PI * angle) / 360);
+    	Rotation imap = new Rotation(-2 * Math.PI * angle / 360);	// inverse mapping (target to source)
     	FloatProcessor[] processors = ColorStack.getProcessors(colStack);
   
    		for (FloatProcessor fp : processors) {
-   			map.applyTo(fp, InterpolationMethod.Bilinear);
+   			imap.applyTo(fp, InterpolationMethod.Bilinear);
    		}
        	
        	ColorStack.toSrgb(colStack);
